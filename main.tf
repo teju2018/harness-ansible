@@ -3,6 +3,10 @@ provider "google" {
     zone = "us-west1-a"
   
 }
+locals {
+PRIVATE_KEY = file("/root/.ssh/id_rsa")
+PUBLIC_KEY = file("/root/.ssh/id_rsa.pub")
+}
 resource "google_compute_instance" "instance" {
     name= "instance-1"
     machine_type = "e2-standard-2"
@@ -18,7 +22,7 @@ resource "google_compute_instance" "instance" {
       }
     }
 metadata = {
-  ssh-keys = "root:${file("/root/.ssh/id_rsa.pub")}"
+  ssh-keys = "root:${local.PUBLIC_KEY}"
 }
 
   
@@ -27,3 +31,8 @@ metadata = {
 output "vm_external_ip" {
   value = google_compute_instance.instance.network_interface[0].access_config[0].nat_ip
 }
+output "private_key" {
+  value     = local.PRIVATE_KEY
+  sensitive = true
+}
+
