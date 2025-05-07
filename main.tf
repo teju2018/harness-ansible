@@ -27,3 +27,7 @@ output "private_key" {
   value     = tls_private_key.my_ssh_key.private_key_pem
   sensitive = true
 }
+output "vm_external_ip" {
+   
+  value = google_compute_instance.instance.network_interface[0].access_config[0].nat_ip
+}
