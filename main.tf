@@ -18,7 +18,7 @@ resource "google_compute_instance" "instance" {
       }
     }
 metadata = {
-  ssh-keys = "root:${file("/home/harness/.ssh/id_rsa.pub")}"
+  ssh-keys = "root:${file("/root/.ssh/id_rsa.pub")}"
 }
 
   
