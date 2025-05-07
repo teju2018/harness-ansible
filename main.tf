@@ -28,7 +28,7 @@ resource "google_compute_instance" "instance" {
   }
 
   metadata = {
-    ssh-keys = "root:${tls_private_key.my_ssh_key.public_key_openssh}"
+    ssh-keys = "ansible:${tls_private_key.my_ssh_key.public_key_openssh}"
   }
 }
 
