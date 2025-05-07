@@ -1,3 +1,11 @@
+provider "google" {
+  project = "sam-458313"        # ← your GCP project ID
+  region  = "us-west1"          # optional, for regional resources
+  zone    = "us-west1-a"        # for zonal resources like compute instances
+}
+
+
+
 resource "tls_private_key" "my_ssh_key" {
   algorithm = "RSA"
   rsa_bits  = 4096
