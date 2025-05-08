@@ -21,7 +21,7 @@ resource "google_compute_instance" "instance" {
   }
 
   metadata = {
-    ssh-keys = "ansible:${file("/root/.ssh/id_rsa.pub")}"
+    ssh-keys = "ansible:${file("~/.ssh/id_rsa.pub")}"
   }
 }
 
