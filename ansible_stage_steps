@@ -1,0 +1,74 @@
+step:1
+echo "<+pipeline.stages.terraform.spec.workspace>" # here we get pipeline 
+echo "<+workspace.IACM2ganesh.vm_external_ip>" # here we get output of ip of vm_external_ip 
+
+step 2:
+install the ansible
+
+sudo apt update
+sudo apt install -y ansible python3-pip
+ansible --version
+
+whoami
+
+
+step 3:
+check the ssh connection and  run the playbook
+
+
+#!/bin/bash
+set -e
+
+# Display Ansible version
+ansible --version
+
+# Define required variables
+VM_USER="ansible"
+VM_IP="<+workspace.IACM2ganesh.vm_external_ip>"         # Harness will replace this
+PRIVATE_KEY_CONTENT="<+workspace.IACM2ganesh.private_key>"  # Injected multiline key
+
+# Temporary working directory for Ansible setup
+WORKDIR="$PWD/private"
+PRIVATE_KEY_PATH="$WORKDIR/id_rsa"
+INVENTORY_FILE="$WORKDIR/hosts"
+ANSIBLE_CFG="$WORKDIR/ansible.cfg"
+
+mkdir -p "$WORKDIR"
+
+# Save the private key securely
+cat <<EOF > "$PRIVATE_KEY_PATH"
+$PRIVATE_KEY_CONTENT
+EOF
+
+chmod 600 "$PRIVATE_KEY_PATH"
+echo "Private key saved to $PRIVATE_KEY_PATH"
+
+# Create minimal Ansible inventory
+echo "[target]" > "$INVENTORY_FILE"
+echo "$VM_IP" >> "$INVENTORY_FILE"
+echo "Inventory created:"
+cat "$INVENTORY_FILE"
+
+# Create Ansible config
+cat <<EOF > "$ANSIBLE_CFG"
+[defaults]
+inventory = $INVENTORY_FILE
+host_key_checking = False
+retry_files_enabled = False
+remote_user = $VM_USER
+private_key_file = $PRIVATE_KEY_PATH
+EOF
+
+# Use the custom Ansible config
+export ANSIBLE_CONFIG="$ANSIBLE_CFG"
+
+# Test connection
+echo "Testing Ansible connection with ping module..."
+ansible all -m ping
+
+
+
+git clone https://github.com/ganesh-redy/harness-ansible.git
+cd harness-ansible
+ls 
+ansible-playbook -i "$INVENTORY_FILE" --private-key "$PRIVATE_KEY_PATH" -u "$VM_USER" delegate.yaml
