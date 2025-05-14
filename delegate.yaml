@@ -43,4 +43,4 @@
           -e DELEGATE_TOKEN=NTRhYTY0Mjg3NThkNjBiNjMzNzhjOGQyNjEwOTQyZjY= \
           -e DELEGATE_TAGS="paul" \
           -e MANAGER_HOST_AND_PORT=https://app.harness.io \
-          us-docker.pkg.dev/gar-prod-setup/harness-public/harness/delegate:25.
+          us-docker.pkg.dev/gar-prod-setup/harness-public/harness/delegate:25.05.85801
